@@ -165,6 +165,3 @@ table(combined_set$Child, combined_set$Survived)
 combined_set$Child <- factor(combined_set$Child)
 
 
-new update()
-
-
