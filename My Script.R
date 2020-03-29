@@ -150,3 +150,18 @@ Prediction4 <- data.frame(PassengerId = test$PassengerId,
 write.csv(Prediction4, file = "4thPrediction.csv", row.names = FALSE)
 
 
+test$Survived <- NA
+
+combined_set <- rbind(train, test)
+
+combined_set$Name <- as.character(combined_set$Name)
+
+combined_set$Child[combined_set$Age < 14] <- 'Child'
+
+combined_set$Child[combined_set$Age >= 14] <- 'Adult'
+
+table(combined_set$Child, combined_set$Survived)
+
+combined_set$Child <- factor(combined_set$Child)
+
+
