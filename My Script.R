@@ -116,5 +116,37 @@ prediction3 <- data.frame(PassengerId = test$PassengerId,
 
 write.csv (prediction3, file = "3rdPrediction.csv", row.names=FALSE)
 
+install.packages("rattle")
+install.packages("rpart.plot")
+install.packages("RColorBrewer")
+
+library(rpart)
+library(rattle)
+library(rpart.plot)
+library(RColorBrewer)
+
+mytree1 <- rpart(Survived ~ Sex, data = train, method = "class")
+
+fancyRpartPlot(mytree1)
+
+mytree2 <- rpart(Survived ~ Age + Pclass, data = train, method = "class")
+
+fancyRpartPlot(mytree2)
+
+mytree3 <- rpart(Survived ~ Pclass + Sex + Age + SibSp
+                + Parch + Fare + Embarked, data = train, method = "class")
+
+plot(mytree3)
+
+text(mytree3)
+
+fancyRpartPlot(mytree3)
+
+Prediction4th <- predict(mytree3, test, type = "class")
+
+Prediction4 <- data.frame(PassengerId = test$PassengerId,
+                          Survived = Prediction4th)
+
+write.csv(Prediction4, file = "4thPrediction.csv", row.names = FALSE)
 
 
