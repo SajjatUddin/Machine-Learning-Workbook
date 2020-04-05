@@ -228,8 +228,8 @@ combined_set$Fare_type[combined_set$Fare>500]<-"vhigh"
 
 aggregate(Survived~Fare_type, data=combined_set,mean)
 
-#Family Member
-
+# Engineered variable: Family size
+                                 
 combined_set$FamilySize <- combined_set$SibSp + combined_set$Parch + 1
                                  
                                  
