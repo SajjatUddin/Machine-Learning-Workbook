@@ -228,6 +228,11 @@ combined_set$Fare_type[combined_set$Fare>500]<-"vhigh"
 
 aggregate(Survived~Fare_type, data=combined_set,mean)
 
+#Family Member
+
+combined_set$FamilySize <- combined_set$SibSp + combined_set$Parch + 1
+                                 
+                                 
 # Engineered variable: Family
 
 combined_set$Surname <- sapply(combined_set$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][1]})
