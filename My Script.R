@@ -279,5 +279,94 @@ Prediction5 <- data.frame(PassengerId = test$PassengerId,
                           Survived = Prediction5th)
 
 write.csv(Prediction5, file = "5thPrediction.csv", row.names = FALSE)
+                                 
+# Data pre-Processing & Cleaning
+# Fill in Age NAs
+
+summary(combined_set$Age)
+
+FillAge <- rpart(Age ~ Pclass + Mother + FamilySize + Sex + SibSp
+                 + Parch + Deck + Fare + Embarked + Title + FamilyID
+                 + FamilySizeGroup + FamilySize, 
+                 data=combined_set[!is.na(combined_set$Age),], method="anova")
+
+combined_set$Age[is.na(combined_set$Age)] <- predict(FillAge, combined_set[is.na(combined_set$Age),])
+
+summary(combined_set$Age)
+
+summary(combined_set)
+
+summary(combined_set$Embarked)
+
+which(combined_set$Embarked == '')
+
+combined_set$Embarked[c(62,830)] = "S"
+
+combined_set$Embarked <- factor(combined_set$Embarked)
+
+summary(combined_set$Fare)
+
+which(is.na(combined_set$Fare))
+
+combined_set$Fare[1044] <- median(combined_set$Fare, na.rm = TRUE)
 
 
+library('mice')
+library('lattice')
+
+md.pattern(combined_set)
+
+
+
+# New factor for new technique , only allowed <32 levels, so reduce number
+
+combined_set$FamilyID2 <- combined_set$FamilyID
+
+# Convert back to string
+
+combined_set$FamilyID2 <- as.character(combined_set$FamilyID2)
+combined_set$FamilyID2[combined_set$FamilySize <= 3] <- 'Small'
+
+# And convert back to factor
+
+combined_set$FamilyID2 <- factor(combined_set$FamilyID2)
+
+#once again for both the variable
+# Mother
+
+combined_set$Mother <- 'Not Mother'
+combined_set$Mother[combined_set$Sex == 'female' & combined_set$Parch > 0 & combined_set$Age > 18] <- 'Mother'
+combined_set$Mother <- factor(combined_set$Mother)
+
+# Child
+
+combined_set$Child[combined_set$Age < 14] <- 'Child'
+combined_set$Child[combined_set$Age >= 14] <- 'Adult'
+combined_set$Child <- factor(combined_set$Child)
+
+# Check what else might be missing
+
+summary(combined_set)
+
+# Split back into test and train sets
+
+train <- combined_set[1:891,]
+test <- combined_set[892:1309,]
+
+# Build a new tree with our new features
+
+dtree <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked + Title + FamilySize + FamilySizeGroup + FamilyID + FamilyID2,
+               data=train, method="class")
+
+# Now let's make a prediction and write a submission file
+
+Prediction6th <- predict(dtree, test, type = "class")
+Prediction6 <- data.frame(PassengerId = test$PassengerId, Survived = Prediction6th)
+write.csv(Prediction6, file = "6thprediction.csv", row.names = FALSE)
+
+                                 
+
+
+                                 
+                                 
+                                 
