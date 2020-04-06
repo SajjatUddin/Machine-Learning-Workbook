@@ -490,7 +490,7 @@ dtree <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked +
                data=train, method="class")
 
 library(randomForest)
-set.seed(291)
+set.seed(168)
 rftrain01 <- combined_set[1:891, c("Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked", "Title", "FamilySize", "FamilySizeGroup", "FamilyID2")]
 rflabel <- as.factor(train$Survived)
 fit1 <- randomForest(x = rftrain01, y = rflabel, importance = TRUE, ntree = 1000)
@@ -498,7 +498,7 @@ fit1
 varImpPlot(fit1)
 
 
-set.seed(291)
+set.seed(168)
 
 fit2 <- cforest(as.factor(Survived) ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked + Title + FamilySize + FamilyID,
                 data = train, controls=cforest_unbiased(ntree=2000, mtry=3)) 
